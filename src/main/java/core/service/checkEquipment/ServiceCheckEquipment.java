@@ -30,13 +30,14 @@ public class ServiceCheckEquipment {
     }
 
     public static void check(String ip) {
+        final String ipFinal = ip;
         if (service.thread == null) {
             service.thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (!Thread.interrupted()) {
                         try {
-                            InetAddress inetAddress = InetAddress.getByName(ip);
+                            InetAddress inetAddress = InetAddress.getByName(ipFinal);
                             DatagramPacket datagramPacket = new DatagramPacket(new byte[]{1}, 1, inetAddress, 18756);
                             DatagramSocket socket = new DatagramSocket();
                         } catch (UnknownHostException e) {
