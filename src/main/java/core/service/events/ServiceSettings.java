@@ -15,7 +15,19 @@ public class ServiceSettings {
         preferences = Preferences.userRoot().node(PlatformConst.makeVersion());
     }
 
-    public static Preferences root(){
+    public static Preferences pref(){
         return service.preferences;
+    }
+
+    public static Preferences node(String id){
+        return service.preferences.node(id);
+    }
+
+    public static Preferences node(Class<?> clazz){
+        return service.preferences.node(clazz.getName());
+    }
+
+    public static Preferences node(Object object){
+        return node(object.getClass());
     }
 }

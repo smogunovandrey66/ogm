@@ -1,11 +1,12 @@
 group 'ru.morion.perm'
 version '1.0-SNAPSHOT'
 
+println("Hello")
+
 apply plugin: 'java'
 apply plugin: 'application'
 
-//sourceCompatibility = 1.8
-mainClassName = "gui.Application"
+mainClassName = "gui.mainwindow.MainWindow"
 
 repositories {
     mavenCentral()
@@ -14,12 +15,28 @@ repositories {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'gui.Application'
+            'Main-Class': 'gui.mainwindow.MainWindow'
         )
     }
-
 }
+
+println(sourceSets.main.resources.filter.excludes)
+
+
+sourceSets.main {
+//    java {
+//        srcDir 'src/main/java' //assume that your source codes are inside this path
+//    }
+    resources {
+        srcDirs = srcDirs + ['src/main/java']
+        exclude "**/*.java"
+    }
+}
+sourceSets.main.resources.srcDirs.add(new File("src/main/java"))
+println(sourceSets.main.resources.srcDirs)
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile fileTree(dir: System.getProperty("java.home") + '/lib',include: '*.jar')
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.10.0'
 }

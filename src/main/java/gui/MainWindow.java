@@ -5,13 +5,9 @@ import core.ServiceShare;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class MainWindow extends FrameStoreDimensions {
     private JPanel mainPanel = new JPanel() {
@@ -19,7 +15,7 @@ public class MainWindow extends FrameStoreDimensions {
 
         {
             try {
-                image = ImageIO.read(ServiceShare.resource("images/backgroundMorion.bmp"));
+                image = ImageIO.read(ServiceShare.resource("gui/mainwindow/backgroundMorion.bmp"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -50,6 +46,7 @@ public class MainWindow extends FrameStoreDimensions {
         createToolBar();
         createMenu();
         createMainComponents();
+
 
         revalidate();
     }

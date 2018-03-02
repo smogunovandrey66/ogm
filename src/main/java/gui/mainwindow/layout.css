@@ -1,0 +1,4 @@
+.root {
+    -fx-background-image: url("backgroundMorion.bmp");
+    -fx-background-repeat: repeat
+}

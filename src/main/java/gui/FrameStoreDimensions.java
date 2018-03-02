@@ -13,7 +13,7 @@ public class FrameStoreDimensions extends JFrame{
     public FrameStoreDimensions(){
         super();
 
-        userPref = ServiceSettings.root().node(getClass().getName());
+        userPref = ServiceSettings.pref().node(getClass().getName());
 
         setSize(userPref.getInt("width", 500), userPref.getInt("height", 500));
         setLocation(userPref.getInt("x", 0), userPref.getInt("y", 0));

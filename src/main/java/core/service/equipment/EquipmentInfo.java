@@ -1,7 +1,6 @@
 package core.service.equipment;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class EquipmentInfo {
@@ -11,7 +10,6 @@ public class EquipmentInfo {
     private StateCheck stateCheck;
     private InetAddress ipChecking;
     private InetAddress ipChecked;
-    private String ipStr;
 
     public EquipmentInfo() {
         this.id = -1;
@@ -48,11 +46,6 @@ public class EquipmentInfo {
         this.stateCheck = stateCheck;
     }
 
-    public void setInfo(ArrayList<String> info) {
-        this.info = null;
-        this.info = info;
-    }
-
     public InetAddress getIpChecking() {
         return ipChecking;
     }
@@ -69,18 +62,10 @@ public class EquipmentInfo {
         this.ipChecked = ipChecked;
     }
 
-    public String getIpStr() {
-        return ipStr;
-    }
-
-    public void setIpStr(String ipStr) {
-        this.ipStr = ipStr;
-    }
-
     @Override
     public String toString() {
-        return String.format("id=%d,sw=%d,info=%s,stateChek=%s,ipChecking=%s,ipChecked=%s,ipStr=%s",
+        return String.format("id=%d,sw=%d,info=%s,stateChek=%s,ipChecking=%s,ipChecked=%s",
                 id, sw, info.toString(), stateCheck.name(), ipChecking == null ? null :ipChecking.getHostAddress(),
-                ipChecked == null ? null : ipChecked.getHostAddress(), ipStr);
+                ipChecked == null ? null : ipChecked.getHostAddress());
     }
 }

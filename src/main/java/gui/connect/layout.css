@@ -1,0 +1,7 @@
+#logo {
+    -fx-border-width: 0.5;
+    -fx-border-color: #ffffff;
+    -fx-background-color: lightskyblue;
+    -fx-background-image: url("logoConnect.gif");
+    -fx-background-size: stretch
+}

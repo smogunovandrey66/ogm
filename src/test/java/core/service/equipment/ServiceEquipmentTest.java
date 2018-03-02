@@ -20,4 +20,8 @@ public class ServiceEquipmentTest {
     public void checkSync() {
         System.out.println("Test ServiceEquipmentTest");
     }
+
+    @Test
+    public void checkEquipment() {
+    }
 }

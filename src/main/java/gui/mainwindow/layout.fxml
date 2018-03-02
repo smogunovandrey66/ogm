@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.mainwindow.Controller">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Оборудование">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Подключение" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Настройки">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Настройки программы" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Помощь">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Справка" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <ProgressBar prefWidth="200.0" progress="0.24" />
+   </bottom>
+   <left>
+      <ToolBar orientation="VERTICAL" prefHeight="351.0" prefWidth="39.0" BorderPane.alignment="CENTER">
+         <items>
+             <Button fx:id="btnConnectForm" mnemonicParsing="false" onAction="#btnConnectFormClick" prefHeight="30.0" prefWidth="30.0">
+                 
+             </Button>
+         </items>
+      </ToolBar>
+   </left>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

@@ -30,4 +30,13 @@ public class ServiceShare {
         return classLoader.getResource(relativePath);
     }
 
+    public static String bytesToHexString(byte[] bytes, int len){
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < len; i++){
+            builder.append(String.format("%02x", bytes[i]));
+            builder.append(" ");
+        };
+        builder.deleteCharAt(builder.length() - 1);
+        return builder.toString();
+    }
 }
