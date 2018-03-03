@@ -8,6 +8,8 @@ apply plugin: 'application'
 
 mainClassName = "gui.mainwindow.MainWindow"
 
+compileJava.options.encoding = 'UTF-8'
+
 repositories {
     mavenCentral()
 }
@@ -32,6 +34,9 @@ sourceSets.main {
         exclude "**/*.java"
     }
 }
+
+
+
 sourceSets.main.resources.srcDirs.add(new File("src/main/java"))
 println(sourceSets.main.resources.srcDirs)
 
