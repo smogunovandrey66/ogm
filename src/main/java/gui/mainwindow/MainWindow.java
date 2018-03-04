@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import localserver.ServiceLocalServer;
+import localserver.ServiceLocalBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ public class MainWindow extends Application{
     private Stage stage;
 
     private static void initServices(){
-        ServiceLocalServer.init();
+        ServiceLocalBlock.init();
     }
 
     @Override

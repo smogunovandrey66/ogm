@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
-import java.nio.charset.Charset;
 
 class LocalUdpServer extends Thread {
 
@@ -40,10 +39,10 @@ class LocalUdpServer extends Thread {
             DatagramPacket receiveDatagramPacket = new DatagramPacket(new byte[1024], 1024);
             try {
                 socket.receive(receiveDatagramPacket);
-                logger.debug("Локальный Udp сервере получил: " + ServiceShare.bytesToHexString(receiveDatagramPacket.getData(), receiveDatagramPacket.getLength()));
+                logger.debug("Локальный Udp сервере получил: " + ServiceShare.bytesToHexString(receiveDatagramPacket.getData(), receiveDatagramPacket.getLength(), " "));
                 byte[] sendData;
                 if (receiveDatagramPacket.getLength() == 0)
-                    sendData = ServiceLocalServer.makeError(ErrorsServer.INVALID_ARGUMENTS);
+                    sendData = ServiceLocalBlock.makeError(ErrorsServer.INVALID_ARGUMENTS);
                 else {
                     switch (receiveDatagramPacket.getData()[0]){
                         case Commands.IDENTIFICATION_EQUIPMENT:
@@ -53,7 +52,7 @@ class LocalUdpServer extends Thread {
                             sendData = str.getBytes("windows-1251");
                             break;
                             default:
-                                sendData = ServiceLocalServer.makeError(ErrorsServer.INVALID_ARGUMENTS);
+                                sendData = ServiceLocalBlock.makeError(ErrorsServer.INVALID_ARGUMENTS);
                     }
                 };
                 socket.send(new DatagramPacket(sendData, sendData.length, receiveDatagramPacket.getAddress(), receiveDatagramPacket.getPort()));

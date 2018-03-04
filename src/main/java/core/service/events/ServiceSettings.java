@@ -1,7 +1,7 @@
 package core.service.events;
 
 
-import core.PlatformConst;
+import core.platformconst.PlatformConst;
 
 import java.util.prefs.Preferences;
 

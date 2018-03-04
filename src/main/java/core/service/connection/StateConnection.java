@@ -5,8 +5,10 @@ package core.service.connection;
  */
 public enum StateConnection {
     off,
-    blockConnecting,
-    blockEstablished,
-    localConnecting,
-    localEstablished
+    connecting,
+    established
+//    blockConnecting,
+//    blockEstablished,
+//    localConnecting,
+//    localEstablished
 }

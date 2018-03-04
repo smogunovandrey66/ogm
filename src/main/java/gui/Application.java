@@ -1,6 +1,6 @@
 package gui;
 
-import core.PlatformConst;
+import core.platformconst.PlatformConst;
 import core.service.events.ServiceEvents;
 
 import java.awt.event.WindowAdapter;

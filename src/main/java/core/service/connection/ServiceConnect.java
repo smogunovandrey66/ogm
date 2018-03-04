@@ -7,7 +7,7 @@ import java.net.*;
 import java.util.ArrayList;
 
 public class ServiceConnect {
-    private static ServiceConnect serviceConnect = new ServiceConnect();
+    private static ServiceConnect service = null;
 
     /**
      * Состояние приложения: <ul><li>не подключено</li> <li>происходит подключение к блоку</li> <li>подключено к блоку</li>
@@ -42,16 +42,16 @@ public class ServiceConnect {
             System.out.println("Время истекло");
         } catch (IOException e) {
             System.out.println("Ошибка сокета");
-            ;
         }
     }
 
     public static void addIViewConnect(IViewConnect iViewConnect){
-        serviceConnect.iViewConnects.add(iViewConnect);
-        iViewConnect.updateStateConnection(serviceConnect.stateConnection);
+        service.iViewConnects.add(iViewConnect);
+        iViewConnect.updateStateConnection(service.stateConnection);
     }
 
-    public static void main(String[] args) {
-        checkInfoEquipment("192.168.5.48");
+    public static void init(){
+        if(service == null)
+            service = new ServiceConnect();
     }
 }

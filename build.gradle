@@ -45,3 +45,8 @@ dependencies {
     compile fileTree(dir: System.getProperty("java.home") + '/lib',include: '*.jar')
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.10.0'
 }
+
+task copyDependencies(type: Copy) {
+    from configurations.runtime
+    into 'dependencies'
+}
