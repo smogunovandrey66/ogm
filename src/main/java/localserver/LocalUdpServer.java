@@ -44,17 +44,18 @@ class LocalUdpServer extends Thread {
                 if (receiveDatagramPacket.getLength() == 0)
                     sendData = ServiceLocalBlock.makeError(ErrorsServer.INVALID_ARGUMENTS);
                 else {
-                    switch (receiveDatagramPacket.getData()[0]){
+                    switch (receiveDatagramPacket.getData()[0]) {
                         case Commands.IDENTIFICATION_EQUIPMENT:
-                            String str = new String(new byte[]{Commands.IDENTIFICATION_EQUIPMENT/*cmd*/, (byte)140/*id*/, 0/*SW*/, 0/*разделитель*/}, "windows-1251") +
+                            String str = new String(new byte[]{Commands.IDENTIFICATION_EQUIPMENT/*cmd*/, (byte) 140/*id*/, 0/*SW*/, 0/*разделитель*/}, "windows-1251") +
                                     "АМД140\n" + "Необходимо оборудование КПО140" +
                                     new String(new byte[]{0}, "windows-1251");
                             sendData = str.getBytes("windows-1251");
                             break;
-                            default:
-                                sendData = ServiceLocalBlock.makeError(ErrorsServer.INVALID_ARGUMENTS);
+                        default:
+                            sendData = ServiceLocalBlock.makeError(ErrorsServer.INVALID_ARGUMENTS);
                     }
-                };
+                }
+                ;
                 socket.send(new DatagramPacket(sendData, sendData.length, receiveDatagramPacket.getAddress(), receiveDatagramPacket.getPort()));
             } catch (IOException e) {
                 logger.error(e.getMessage());

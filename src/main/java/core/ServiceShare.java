@@ -31,8 +31,11 @@ public class ServiceShare {
     }
 
     public static String bytesToHexString(byte[] bytes, int len, String delimiter) {
+        return bytesToHexString(bytes, 0, len, delimiter);
+    }
+    public static String bytesToHexString(byte[] bytes, int from, int len, String delimiter) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < len; i++) {
+        for (int i = from; i < len; i++) {
             builder.append(String.format("%02X", bytes[i]));
             builder.append(delimiter);
         }
