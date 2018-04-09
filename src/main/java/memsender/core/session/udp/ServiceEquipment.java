@@ -13,7 +13,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,6 +25,7 @@ public class ServiceEquipment extends Thread {
     private static Logger logger;
 
     private HashMap<String, HashMap<Integer, IReceiverEquipmentInfo>> tasks;
+    private Queue<TaskCheckEquipment> queueTasks;
     private Lock lock;
     private Condition condition;
     private DatagramSocket datagramSocket;
@@ -51,6 +54,7 @@ public class ServiceEquipment extends Thread {
             serviceEquipment = null;
             return;
         }
+        queueTasks = new LinkedList<>();
         tasks = new HashMap<>();
         lock = new ReentrantLock();
         condition = lock.newCondition();
@@ -84,7 +88,7 @@ public class ServiceEquipment extends Thread {
 
         while (true) {
             lock.lock();
-            try {
+            try {/*
                 if (tasks.size() == 0)
                     condition.await();
                 if (!tasks.entrySet().iterator().hasNext())
@@ -96,7 +100,7 @@ public class ServiceEquipment extends Thread {
                 port = entryPort.getKey();
                 receiver = entryPort.getValue();
             } catch (InterruptedException e) {
-                break;
+                break;*/
             } finally {
                 lock.unlock();
             }
@@ -136,7 +140,7 @@ public class ServiceEquipment extends Thread {
 
     public static void runCheck(String host, int port, IReceiverEquipmentInfo receiver) {
         serviceEquipment.lock.lock();
-        try {
+        try {/*
             HashMap<Integer, IReceiverEquipmentInfo> ports = serviceEquipment.tasks.get(host);
             if (ports != null) {
                 IReceiverEquipmentInfo receiverEquipmentInfo = ports.get(port);
@@ -150,6 +154,15 @@ public class ServiceEquipment extends Thread {
                 ports.put(port, receiver);
                 serviceEquipment.tasks.put(host, ports);
             }
+            serviceEquipment.condition.signal();*/
+            for(TaskCheckEquipment task: serviceEquipment.queueTasks){
+                if(task.host == host & task.port == port & task.receiver == receiver) {
+//                    serviceEquipment.condition.signal();
+                    return;
+                }
+
+            }
+            serviceEquipment.queueTasks.add(new TaskCheckEquipment().build(port).build(host).build(receiver));
             serviceEquipment.condition.signal();
         } finally {
             serviceEquipment.lock.unlock();
@@ -165,10 +178,17 @@ public class ServiceEquipment extends Thread {
         }
     }
 
+    public static void test(){
+        try{
+            int i = 1 / 0;
+            if(1 > 0)
+                return;
+        }finally {
+            System.out.println("heelo");
+        }
+    }
     public static void main(String[] args) {
-        byte[] bytes = new byte[2];
-        System.out.println(bytes[2]);
-        System.out.println(ServiceShare.bytesToHexString(bytes, " "));
+        test();
     }
 
 }
