@@ -19,6 +19,16 @@ public class ServiceSettings {
         return service.preferences;
     }
 
+    public static Preferences pref(String id){
+        return service.preferences.node(id);
+    }
+    public static Preferences pref(Class<?> clazz){
+        return pref(clazz.getName());
+    }
+    public static Preferences pref(Object object){
+        return pref(object.getClass());
+    }
+
     public static Preferences node(String id){
         return service.preferences.node(id);
     }
