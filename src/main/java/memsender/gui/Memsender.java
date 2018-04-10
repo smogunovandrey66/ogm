@@ -1,13 +1,15 @@
 package memsender.gui;
 
-import core.service.events.ServiceSettings;
+import core.ServiceSettings;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Memsender extends Application{
     public static void main(String[] args) {
@@ -18,7 +20,7 @@ public class Memsender extends Application{
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(final Stage stage) throws Exception {
         BorderPane root = new BorderPane();
         TextArea textArea = new TextArea();
 //        textArea.setEditable(false);
@@ -33,8 +35,18 @@ public class Memsender extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Memsender");
-        stage.setWidth(800);
-        stage.setHeight(400);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                ServiceSettings.saveDimensions(stage, RootPaneMemsender.class.getName());
+            }
+        });
+
+        if(ServiceSettings.pref(RootPaneMemsender.class).getBoolean(ServiceSettings.EXIST, false)){
+            ServiceSettings.loadDimensions(stage, RootPaneMemsender.class.getName(), 0, 0, 400, 300);
+        } else{
+            ServiceSettings.setCenter(stage, 400, 300, null);
+        }
 
         stage.show();
     }

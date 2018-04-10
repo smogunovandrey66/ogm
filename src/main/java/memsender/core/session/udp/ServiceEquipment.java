@@ -3,7 +3,7 @@ package memsender.core.session.udp;
 
 import core.Commands;
 import core.ServiceShare;
-import core.service.events.ServiceSettings;
+import core.ServiceSettings;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.slf4j.Logger;

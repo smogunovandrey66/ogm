@@ -1,7 +1,7 @@
 package gui;
 
 import com.sun.scenario.Settings;
-import core.service.events.ServiceSettings;
+import core.ServiceSettings;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -77,7 +77,6 @@ public class StageStoreDimensions extends Stage {
     public static void setCenter(Stage stage, Window owner) {
         Rectangle2D rect = Screen.getPrimary().getVisualBounds();
         Pane parent = (Pane) stage.getScene().getRoot();
-
         if (owner != null)
             for (Screen screen : Screen.getScreens()) {
                 if (screen.getVisualBounds().contains(owner.getX(), owner.getY()))

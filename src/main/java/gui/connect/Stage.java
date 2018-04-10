@@ -1,6 +1,6 @@
 package gui.connect;
 
-import core.service.events.ServiceSettings;
+import core.ServiceSettings;
 import gui.StageStoreDimensions;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;

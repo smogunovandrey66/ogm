@@ -1,7 +1,7 @@
 package gui;
 
 import core.service.events.ServiceEvents;
-import core.service.events.ServiceSettings;
+import core.ServiceSettings;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;

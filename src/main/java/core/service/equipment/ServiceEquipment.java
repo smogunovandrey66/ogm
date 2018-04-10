@@ -1,7 +1,7 @@
 package core.service.equipment;
 
 import core.ServiceShare;
-import core.service.events.ServiceSettings;
+import core.ServiceSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
