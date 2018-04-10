@@ -1,5 +1,5 @@
 package memsender.core.session.udp;
 
 public interface IReceiverEquipmentInfo {
-    void update(String ip, int port, boolean avaliable, int idEq, int swEq, String strInfo);
+    void update(String host, int port, boolean avaliable, byte idEq, byte swEq, String strInfo);
 }

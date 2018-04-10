@@ -1,5 +1,6 @@
 package memsender.gui;
 
+import core.service.events.ServiceSettings;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,6 +11,9 @@ import javafx.stage.Stage;
 
 public class Memsender extends Application{
     public static void main(String[] args) {
+        ServiceSettings.init();
+        String s = ServiceSettings.pref("uu").get("aaa", "ooo");
+        ServiceSettings.pref("uu").put("aaa", "zzz");
         launch(args);
     }
 
@@ -29,8 +33,9 @@ public class Memsender extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Memsender");
-        stage.setWidth(200);
-        stage.setHeight(200);
+        stage.setWidth(800);
+        stage.setHeight(400);
+
         stage.show();
     }
 }

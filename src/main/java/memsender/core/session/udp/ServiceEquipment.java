@@ -5,17 +5,17 @@ import core.Commands;
 import core.ServiceShare;
 import core.service.events.ServiceSettings;
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -24,20 +24,29 @@ public class ServiceEquipment extends Thread {
     private static ServiceEquipment serviceEquipment = null;
     private static Logger logger;
 
-    private HashMap<String, HashMap<Integer, IReceiverEquipmentInfo>> tasks;
-    private Queue<TaskCheckEquipment> queueTasks;
+    private LinkedList<TaskCheckEquipment> queueTasks;
     private Lock lock;
     private Condition condition;
     private DatagramSocket datagramSocket;
     private DatagramPacket receivePacket;
     private DatagramPacket sendPacket;
-    private boolean error;
+    private TaskCheckEquipment curTask;
+    private String curHost;
+    private int curPort;
+    private IReceiverEquipmentInfo curReceiver;
+    private boolean curAvaliable;
+    private byte curIdEq, curSwEq;
+    private String curStrInfo;
     /**
      * Максимоальное время ожидания при проверке оборудования, мс
      */
     public final static String TIMEOUT_CHECKEQUIPMENT = "TIMEOUT_CHECKEQUIPMENT";
+    /**
+     * Порт, на котором происходит проверка оборудования
+     */
+    public final static int DEFAULT_PORT_CHECK_EQUIPMENT = 18756;
 
-    public void init() {
+    public static void init() {
         new ServiceEquipment();
     }
 
@@ -55,7 +64,6 @@ public class ServiceEquipment extends Thread {
             return;
         }
         queueTasks = new LinkedList<>();
-        tasks = new HashMap<>();
         lock = new ReentrantLock();
         condition = lock.newCondition();
         logger = LoggerFactory.getLogger(ServiceEquipment.class);
@@ -65,73 +73,63 @@ public class ServiceEquipment extends Thread {
         start();
     }
 
-    private void removeNotSafe(String host, int port, IReceiverEquipmentInfo receiver) {
-        HashMap<Integer, IReceiverEquipmentInfo> ports = tasks.get(host);
-        if (ports != null) {
-            IReceiverEquipmentInfo receiverEquipmentInfo = ports.get(port);
-            if (receiverEquipmentInfo == receiver) {
-                ports.remove(port);
-                if (ports.size() == 0)
-                    tasks.remove(host);
-            }
-        }
-    }
-
     @Override
     public void run() {
-        HashMap<Integer, IReceiverEquipmentInfo> ports;
-        String host;
-        int port;
-        IReceiverEquipmentInfo receiver;
-
         logger.debug("Запущен сервис проверки оборудования");
 
         while (true) {
+            //Получаем первое задание на проверку
             lock.lock();
-            try {/*
-                if (tasks.size() == 0)
+            try {
+                while ((curTask = queueTasks.peek()) == null)
                     condition.await();
-                if (!tasks.entrySet().iterator().hasNext())
-                    continue;
-                Map.Entry<String, HashMap<Integer, IReceiverEquipmentInfo>> entryHost = tasks.entrySet().iterator().next();
-                host = entryHost.getKey();
-                ports = entryHost.getValue();
-                Map.Entry<Integer, IReceiverEquipmentInfo> entryPort = ports.entrySet().iterator().next();
-                port = entryPort.getKey();
-                receiver = entryPort.getValue();
+                curHost = curTask.host;
+                curPort = curTask.port;
+                curReceiver = curTask.receiver;
             } catch (InterruptedException e) {
-                break;*/
+                logger.error(e.getMessage());
+                break;
             } finally {
                 lock.unlock();
             }
+
             //Собственно проверка доступности оборудования
-            boolean avaliable = false;
-            int idEq = 0, swEq = 0;
-            String strInfo = "";
+            curAvaliable = false;
             try {
+                sendPacket.setAddress(InetAddress.getByName(curHost));
+                sendPacket.setPort(curPort);
                 datagramSocket.send(sendPacket);
                 datagramSocket.receive(receivePacket);
                 byte[] receiveBytes = receivePacket.getData();
                 if (receiveBytes[0] == Commands.IDENTIFICATION_EQUIPMENT) {
-                    idEq = receiveBytes[1];
-                    swEq = receiveBytes[2];
-                    strInfo = new String(receiveBytes, 3, receivePacket.getLength() - 1, "windows-1251");
+                    curIdEq = receiveBytes[1];
+                    curSwEq = receiveBytes[2];
+                    curStrInfo = new String(receiveBytes, 3, receivePacket.getLength() - 1, "windows-1251").trim();
+                    curAvaliable = true;
                 }
             } catch (IOException ioE) {
-                logger.error(ioE.getMessage());
+                logger.debug(ioE.getMessage());
             } catch (ArrayIndexOutOfBoundsException arrException) {
-                logger.error(arrException.getMessage());
+                logger.debug(arrException.getMessage());
             }
 
             //Уведомить о состоянии проверки(при необходимости) и удалить(тоже при необходимости)
             lock.lock();
             try {
-                if(receiver != null){
-                   receiver.update(host, port, avaliable, idEq, swEq, strInfo);
-                   TaskFxEquipment later = new TaskFxEquipment();
-                   later.avaliable = avaliable;
-                   Platform.runLater(later);
-                }
+                if(queueTasks.indexOf(curTask) == -1)
+                    continue;
+                queueTasks.remove(curTask);
+                curTask = null;
+                TaskFxEquipment taskFxEquipment = new TaskFxEquipment();
+                taskFxEquipment.avaliable = curAvaliable;
+                taskFxEquipment.idEq = curIdEq;
+                taskFxEquipment.swEq = curSwEq;
+                taskFxEquipment.host = curHost;
+                taskFxEquipment.port = curPort;
+                taskFxEquipment.receiver = curReceiver;
+                taskFxEquipment.strInfo = curStrInfo;
+
+                Platform.runLater(taskFxEquipment);
             } finally {
                 lock.unlock();
             }
@@ -140,27 +138,11 @@ public class ServiceEquipment extends Thread {
 
     public static void runCheck(String host, int port, IReceiverEquipmentInfo receiver) {
         serviceEquipment.lock.lock();
-        try {/*
-            HashMap<Integer, IReceiverEquipmentInfo> ports = serviceEquipment.tasks.get(host);
-            if (ports != null) {
-                IReceiverEquipmentInfo receiverEquipmentInfo = ports.get(port);
-                if (receiverEquipmentInfo == receiver) {
-                    return;
-                } else {
-                    ports.put(port, receiver);
-                }
-            } else {
-                ports = new HashMap<>();
-                ports.put(port, receiver);
-                serviceEquipment.tasks.put(host, ports);
-            }
-            serviceEquipment.condition.signal();*/
+        try {
             for(TaskCheckEquipment task: serviceEquipment.queueTasks){
-                if(task.host == host & task.port == port & task.receiver == receiver) {
-//                    serviceEquipment.condition.signal();
+                if(task.host.equals(host) & task.port == port & task.receiver == receiver) {
                     return;
                 }
-
             }
             serviceEquipment.queueTasks.add(new TaskCheckEquipment().build(port).build(host).build(receiver));
             serviceEquipment.condition.signal();
@@ -169,26 +151,71 @@ public class ServiceEquipment extends Thread {
         }
     }
 
-    public static void removeTask(String host, int port, IReceiverEquipmentInfo receiver) {
+    public static void removeCheck(String host, int port, IReceiverEquipmentInfo receiver){
         serviceEquipment.lock.lock();
         try {
-            serviceEquipment.removeNotSafe(host, port, receiver);
+            Iterator<TaskCheckEquipment> iterator = serviceEquipment.queueTasks.iterator();
+            TaskCheckEquipment task;
+            while (iterator.hasNext()){
+                task = iterator.next();
+                if(task.host.equals(host) & task.port == port & task.receiver == receiver)
+                    iterator.remove();
+            }
         } finally {
             serviceEquipment.lock.unlock();
         }
     }
 
-    public static void test(){
-        try{
-            int i = 1 / 0;
-            if(1 > 0)
-                return;
-        }finally {
-            System.out.println("heelo");
-        }
-    }
     public static void main(String[] args) {
-        test();
+        LinkedList<String> linkedList = new LinkedList<>();
+        linkedList.add("one");
+        linkedList.add("twho");
+        linkedList.add("three");
+        Iterator<String> iterator = linkedList.iterator();
+        while (iterator.hasNext()){
+            if(iterator.next().equals("one")){
+                iterator.remove();
+            }
+        }
+        System.out.println(linkedList);
+//        for(String s: linkedList){
+//            if(s.equals("one"))
+//                linkedList.remove("one");
+//        }
+        init();
+        JFXPanel jfxPanel = new JFXPanel();
+        runCheck("192.168.5.49", DEFAULT_PORT_CHECK_EQUIPMENT, new IReceiverEquipmentInfo() {
+            @Override
+            public void update(String host, int port, boolean avaliable, byte idEq, byte swEq, String strInfo) {
+                int i = idEq & 0xFF;
+                System.out.println(String.format("%02X(%d), %02X(%d)", idEq, i, swEq, swEq));
+                System.out.println(strInfo);
+                for(String str: strInfo.split("\\n")) {
+                    try {
+                        System.out.println(ServiceShare.bytesToHexString(str.getBytes("windows-1251"), " "));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        IReceiverEquipmentInfo ir =  new IReceiverEquipmentInfo() {
+            @Override
+            public void update(String host, int port, boolean avaliable, byte idEq, byte swEq, String strInfo) {
+                int i = idEq & 0xFF;
+                System.out.println(String.format("%02X(%d), %02X(%d)", idEq, i, swEq, swEq));
+                System.out.println(strInfo);
+                for(String str: strInfo.split("\\n")) {
+                    try {
+                        System.out.println(ServiceShare.bytesToHexString(str.getBytes("windows-1251"), " "));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        runCheck("192.168.1.2", DEFAULT_PORT_CHECK_EQUIPMENT, ir);
+//        removeCheck("192.168.1.2", DEFAULT_PORT_CHECK_EQUIPMENT, ir);
     }
 
 }
