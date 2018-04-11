@@ -29,6 +29,7 @@ public class Memsender extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Memsender");
+
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {

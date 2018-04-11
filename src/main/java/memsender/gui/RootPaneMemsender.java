@@ -1,12 +1,9 @@
 package memsender.gui;
 
 import javafx.geometry.Orientation;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.PaneBuilder;
+import javafx.scene.Group;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 class RootPaneMemsender extends BorderPane{
     public RootPaneMemsender(){
@@ -16,6 +13,7 @@ class RootPaneMemsender extends BorderPane{
         pnlItemLog.setCenter(txtRawItemLog);
 
         TextArea txtDecodedItemLog = new TextArea();
+        txtDecodedItemLog.setPrefColumnCount(1);
         BorderPane pnlDecodedItemLog = new BorderPane();
         pnlDecodedItemLog.setCenter(txtDecodedItemLog);
 
@@ -26,23 +24,33 @@ class RootPaneMemsender extends BorderPane{
 
         ListView<ItemDataMemsender> listLog = new ListView<>();
 
-        SplitPane splitPaneListItem = new SplitPane();
-        splitPaneListItem.setOrientation(Orientation.HORIZONTAL);
-        splitPaneListItem.getItems().addAll(listLog, splitPaneItemLog);
+        SplitPane splitPaneLog = new SplitPane();
+        splitPaneLog.setOrientation(Orientation.HORIZONTAL);
+        splitPaneLog.getItems().add(listLog);
+        splitPaneLog.getItems().add(splitPaneItemLog);
+        setCenter(splitPaneLog);
 
-        BorderPane pnlLogAndCommand = new BorderPane();
-        pnlLogAndCommand.setCenter(splitPaneListItem);
+        BorderPane pnlCommand = new BorderPane();
+        pnlCommand.setStyle("-fx-background-color:red");
 
-        Pane pnlCommand = new Pane();
-        pnlCommand.setPrefHeight(50);
+        ComboBox<String> comboBoxCommand = new ComboBox<>();
+        comboBoxCommand.getItems().add("0F");
+        comboBoxCommand.getItems().add("03");
+        comboBoxCommand.setEditable(true);
+        AnchorPane pnlComboCommand = new AnchorPane();
+        pnlComboCommand.getChildren().add(comboBoxCommand);
+        AnchorPane.setTopAnchor(comboBoxCommand, 0.0);
+        AnchorPane.setRightAnchor(comboBoxCommand, 0.0);
+        AnchorPane.setLeftAnchor(comboBoxCommand, 0.0);
+        AnchorPane.setBottomAnchor(comboBoxCommand, 0.0);
+        pnlCommand.setCenter(pnlComboCommand);
 
-        pnlLogAndCommand.setBottom(pnlCommand);
-
-        setCenter(pnlLogAndCommand);
+        Button btnSendCommand = new Button("Отправить");
+        pnlCommand.setRight(btnSendCommand);
 
         BorderPane pnlButtons = new BorderPane();
-        pnlButtons.setPrefHeight(100);
         pnlButtons.setStyle("-fx-background-color:blue");
+        pnlButtons.setBottom(pnlCommand);
         setBottom(pnlButtons);
     }
 }
