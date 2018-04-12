@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 public class Memsender extends Application{
     public static void main(String[] args) {
         ServiceSettings.init();
@@ -21,8 +20,8 @@ public class Memsender extends Application{
     @Override
     public void start(final Stage stage) throws Exception {
         BorderPane root = FXMLLoader.load(getClass().getResource("LayoutMemsender.fxml"));
-
         Scene scene = new Scene(root);
+
         stage.setScene(scene);
         stage.setTitle("Memsender");
 
@@ -30,6 +29,7 @@ public class Memsender extends Application{
             @Override
             public void handle(WindowEvent windowEvent) {
                 ServiceSettings.saveDimensions(stage, RootPaneMemsender.class.getName());
+                ServiceSettings.pref(ControllerMemsender.class).put(ControllerMemsender.ADRESSES, "1 2 3");
             }
         });
 
