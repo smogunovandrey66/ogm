@@ -2,14 +2,10 @@ package memsender.gui;
 
 import core.ServiceSettings;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.Parent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -24,7 +20,7 @@ public class Memsender extends Application{
 
     @Override
     public void start(final Stage stage) throws Exception {
-        Parent root = new RootPaneMemsender();
+        BorderPane root = FXMLLoader.load(getClass().getResource("LayoutMemsender.fxml"));
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
