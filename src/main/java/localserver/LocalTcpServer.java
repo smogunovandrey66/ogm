@@ -15,7 +15,9 @@ class LocalTcpServer extends Thread{
     private Logger logger;
     private ServerSocket serverSocket;
     private ArrayList<LocalSession> sessions;
-    LocalTcpServer(){
+    private LocalBlock localBlock;
+    LocalTcpServer(LocalBlock localBlock){
+        this.localBlock = localBlock;
         setDaemon(true);
         start();
     }
@@ -27,7 +29,7 @@ class LocalTcpServer extends Thread{
         try {
             serverSocket = new ServerSocket(DEFAULT_TCP_PORT);
         } catch (IOException e) {
-            logger.error("Локальный сервер не создан%s", e.getMessage());
+            logger.error("Локальный сервер не создан: %s", e.getMessage());
             return;
         }
 

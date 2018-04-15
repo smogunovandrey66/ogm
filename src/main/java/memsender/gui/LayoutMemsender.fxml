@@ -43,7 +43,7 @@
                                 <Label text="Порт UDP:" GridPane.rowIndex="2" />
                                 <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <ComboBox fx:id="adresses" editable="true" prefWidth="150.0" GridPane.columnIndex="1" />
+                                <ComboBox fx:id="adresses" editable="true" prefHeight="22.0" prefWidth="124.0" GridPane.columnIndex="1" />
                             </children>
                         </GridPane>
                         <GridPane layoutX="202.0" layoutY="7.0" prefHeight="62.0" prefWidth="237.0">

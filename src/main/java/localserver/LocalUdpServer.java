@@ -14,8 +14,10 @@ class LocalUdpServer extends Thread {
 
     private Logger logger;
     private DatagramSocket socket;
+    private LocalBlock localBlock;
 
-    LocalUdpServer() {
+    LocalUdpServer(LocalBlock localBlock) {
+        this.localBlock = localBlock;
         setDaemon(true);
         start();
     }
