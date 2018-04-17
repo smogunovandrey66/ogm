@@ -17,7 +17,7 @@ public class MainWindow extends Application{
     private Stage stage;
 
     private static void initServices(){
-        ServiceLocalBlock.init();
+//        ServiceLocalBlock.init();
     }
 
     @Override

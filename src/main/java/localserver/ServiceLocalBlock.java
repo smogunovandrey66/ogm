@@ -5,17 +5,18 @@ import core.platformconst.PlatformConst;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ServiceLocalBlock {
     private LocalUdpServer udpServer;
     private LocalTcpServer tcpServer;
+
     private static ServiceLocalBlock service = null;
 
-    private static ArrayList<ServiceLocalBlock> listBlock = new ArrayList<>();
+    private static HashMap<Byte, LocalBlock> blocks = new HashMap<>();
 
     private ServiceLocalBlock(){
-        udpServer = new LocalUdpServer();
-        tcpServer = new LocalTcpServer();
+
     }
 
     static byte[] makeError(byte error){
@@ -29,12 +30,9 @@ public class ServiceLocalBlock {
         return sendData;
     }
 
-    public static void init(){
-        for(int id: PlatformConst.ID_EQUIPMENT_ALL){
-            File file = new File(String.format("%d", id));
-            file.mkdir();
-        }
-        if(service == null)
-            service = new ServiceLocalBlock();
+    public static void setCurrent(byte idEq){
+        if(blocks.containsKey(idEq))
+            return;
+        LocalBlock localBlock = new LocalBlock();
     }
 }

@@ -49,4 +49,8 @@ public class LocalBlock {
         if(localUdpServer == null)
             localUdpServer = new LocalUdpServer(this);
     }
+
+    public static void init(byte idEq){
+
+    }
 }
