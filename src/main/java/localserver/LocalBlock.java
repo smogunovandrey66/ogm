@@ -3,17 +3,12 @@ package localserver;
 import java.util.ArrayList;
 
 public class LocalBlock {
-    private String rootPath;
+    private String path;
     private byte id;
     private byte sw;
     private ArrayList<String> strInfo;
     private LocalTcpServer localTcpServer;
     private LocalUdpServer localUdpServer;
-
-
-    public String getRootPath() {
-        return rootPath;
-    }
 
     public ArrayList<String> getStrInfo() {
         return strInfo;
@@ -21,10 +16,6 @@ public class LocalBlock {
 
     public void setStrInfo(ArrayList<String> strInfo) {
         this.strInfo = strInfo;
-    }
-
-    public void setRootPath(String rootPath) {
-        this.rootPath = rootPath;
     }
 
     public byte getId() {

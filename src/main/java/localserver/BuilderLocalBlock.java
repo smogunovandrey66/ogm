@@ -9,7 +9,7 @@ public class BuilderLocalBlock {
     }
 
     public static LocalBlock buildRootPath(String rootPath){
-       curLocalBlock.setRootPath(rootPath);
+
        return curLocalBlock;
     }
 
