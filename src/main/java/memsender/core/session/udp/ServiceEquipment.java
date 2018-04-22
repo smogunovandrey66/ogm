@@ -167,24 +167,9 @@ public class ServiceEquipment extends Thread {
     }
 
     public static void main(String[] args) {
-        LinkedList<String> linkedList = new LinkedList<>();
-        linkedList.add("one");
-        linkedList.add("twho");
-        linkedList.add("three");
-        Iterator<String> iterator = linkedList.iterator();
-        while (iterator.hasNext()){
-            if(iterator.next().equals("one")){
-                iterator.remove();
-            }
-        }
-        System.out.println(linkedList);
-//        for(String s: linkedList){
-//            if(s.equals("one"))
-//                linkedList.remove("one");
-//        }
         init();
         JFXPanel jfxPanel = new JFXPanel();
-        runCheck("localhost", 53916, new IReceiverEquipmentInfo() {
+        runCheck("localhost", 36838, new IReceiverEquipmentInfo() {
             @Override
             public void update(String host, int port, boolean avaliable, byte idEq, byte swEq, String strInfo) {
                 int i = idEq & 0xFF;

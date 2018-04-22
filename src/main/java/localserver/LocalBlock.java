@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -133,8 +134,10 @@ public class LocalBlock {
     public static void main(String[] args) throws IOException, InterruptedException {
         int idEq = 140;
         int swEq = 0;
+        System.out.println(Paths.get("").toAbsolutePath().toString());
         if (!existDefaultFile(idEq))
             makeDefaultBlock(idEq, swEq);
+        Path path = pathDefaultProperties(idEq);
         System.out.println(readDefaultProp(idEq));
         LocalBlock localBlock = new LocalBlock();
         localBlock.load(pathDefaultProperties(idEq));

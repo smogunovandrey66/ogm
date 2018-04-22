@@ -8,8 +8,13 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -19,11 +24,20 @@ import java.util.prefs.Preferences;
 public class ServiceSettings {
 
     public static final Path DEFAULT_PATH_OGM = Paths.get(System.getProperty("user.home")).resolve("ogm");
+    public static final String PROPERTIES_FILE = "app.properties";
+    public static final String PATH_TO_LOCAL_BLOCK_140 = "pathToLocalBlock";
     private static ServiceSettings service = null;
     private Preferences preferences;
+    private Properties properties;
+    private Path pathProperties = Paths.get(PROPERTIES_FILE);
 
-    private ServiceSettings() {
+    private ServiceSettings() throws IOException {
         preferences = Preferences.userRoot().node(PlatformConst.makeVersion());
+        properties = new Properties();
+        if (Files.exists(pathProperties))
+            try (FileInputStream fileInputStream = new FileInputStream(Paths.get("").toFile())) {
+                properties.load(fileInputStream);
+            }
     }
 
     public final static String WIDTH = "WIDTH";
@@ -111,7 +125,7 @@ public class ServiceSettings {
     }
 
     public static void main(String[] args) {
-        for(StackTraceElement stackTraceElement: Thread.currentThread().getStackTrace())
+        for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace())
             System.out.println(stackTraceElement.getClassName() + "," + stackTraceElement.getMethodName());
     }
 }
