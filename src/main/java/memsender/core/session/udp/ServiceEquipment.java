@@ -184,7 +184,7 @@ public class ServiceEquipment extends Thread {
 //        }
         init();
         JFXPanel jfxPanel = new JFXPanel();
-        runCheck("192.168.5.49", DEFAULT_PORT_CHECK_EQUIPMENT, new IReceiverEquipmentInfo() {
+        runCheck("localhost", 53916, new IReceiverEquipmentInfo() {
             @Override
             public void update(String host, int port, boolean avaliable, byte idEq, byte swEq, String strInfo) {
                 int i = idEq & 0xFF;
@@ -214,7 +214,7 @@ public class ServiceEquipment extends Thread {
                 }
             }
         };
-        runCheck("192.168.1.2", DEFAULT_PORT_CHECK_EQUIPMENT, ir);
+//        runCheck("192.168.1.2", DEFAULT_PORT_CHECK_EQUIPMENT, ir);
 //        removeCheck("192.168.1.2", DEFAULT_PORT_CHECK_EQUIPMENT, ir);
     }
 

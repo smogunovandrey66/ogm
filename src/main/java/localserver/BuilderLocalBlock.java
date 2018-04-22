@@ -19,17 +19,14 @@ public class BuilderLocalBlock {
     }
 
     public static LocalBlock buildStrInfo(String ... infoItems){
-        curLocalBlock.getStrInfo().clear();
-        for(String item: infoItems){
-            curLocalBlock.getStrInfo().add(item);
-        }
+
         return curLocalBlock;
     }
 
     public static LocalBlock start(){
         LocalBlock temp = curLocalBlock;
         curLocalBlock = null;
-        curLocalBlock.start();
+//        curLocalBlock.start();
         return temp;
     }
 }

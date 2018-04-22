@@ -8,6 +8,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -15,6 +17,8 @@ import java.util.prefs.Preferences;
  * Сервис настроек приложения <font style = "color: red"><b>ОГМ</b></font>
  */
 public class ServiceSettings {
+
+    public static final Path DEFAULT_PATH_OGM = Paths.get(System.getProperty("user.home")).resolve("ogm");
     private static ServiceSettings service = null;
     private Preferences preferences;
 
