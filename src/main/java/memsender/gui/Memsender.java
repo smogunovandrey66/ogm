@@ -8,8 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
 public class Memsender extends Application{
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ServiceSettings.init();
         String s = ServiceSettings.pref("uu").get("aaa", "ooo");
         ServiceSettings.pref("uu").put("aaa", "zzz");

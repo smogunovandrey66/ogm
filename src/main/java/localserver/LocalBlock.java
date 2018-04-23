@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -131,17 +133,16 @@ public class LocalBlock {
         return prop;
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        int idEq = 140;
+    public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        ServiceSettings.init();
+        int idEq = 30;
         int swEq = 0;
-        System.out.println(Paths.get("").toAbsolutePath().toString());
-        if (!existDefaultFile(idEq))
-            makeDefaultBlock(idEq, swEq);
-        Path path = pathDefaultProperties(idEq);
-        System.out.println(readDefaultProp(idEq));
+
         LocalBlock localBlock = new LocalBlock();
-        localBlock.load(pathDefaultProperties(idEq));
+        Path path = ServiceSettings.pathToLocalBlock(idEq);
+        if(!Files.exists(path.resolve(BLOCK_PROPERTIES)))
+            makeDefaultBlock(idEq, swEq, path);
+        localBlock.load(path.resolve(BLOCK_PROPERTIES));
         localBlock.start();
-//        localBlock.start();
     }
 }

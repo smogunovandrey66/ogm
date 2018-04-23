@@ -44,6 +44,8 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile fileTree(dir: System.getProperty("java.home") + '/lib',include: '*.jar')
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.10.0'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.20.1'
+
 }
 
 task copyDependencies(type: Copy) {

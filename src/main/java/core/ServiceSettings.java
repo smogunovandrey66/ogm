@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import localserver.LocalBlock;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.*;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -25,19 +29,27 @@ public class ServiceSettings {
 
     public static final Path DEFAULT_PATH_OGM = Paths.get(System.getProperty("user.home")).resolve("ogm");
     public static final String PROPERTIES_FILE = "app.properties";
-    public static final String PATH_TO_LOCAL_BLOCK_140 = "pathToLocalBlock";
+    public static final String DB = "jdbc:sqlite:db";
     private static ServiceSettings service = null;
     private Preferences preferences;
     private Properties properties;
     private Path pathProperties = Paths.get(PROPERTIES_FILE);
+    private Connection connection;
+    private Statement statement;
+    private HashMap<Integer, Path> pathsLocalBlock;
 
-    private ServiceSettings() throws IOException {
+    private ServiceSettings() throws IOException, SQLException, ClassNotFoundException {
         preferences = Preferences.userRoot().node(PlatformConst.makeVersion());
+//        Class.forName("org.sqlite.JDBC") ;
+        connection = DriverManager.getConnection(DB);
+        statement = connection.createStatement();
+
         properties = new Properties();
         if (Files.exists(pathProperties))
             try (FileInputStream fileInputStream = new FileInputStream(Paths.get("").toFile())) {
                 properties.load(fileInputStream);
             }
+        pathsLocalBlock = new HashMap<>();
     }
 
     public final static String WIDTH = "WIDTH";
@@ -46,18 +58,36 @@ public class ServiceSettings {
     public final static String X = "X";
     public final static String EXIST = "EXIST";
 
+    public static Path pathToLocalBlock(int idEq) throws SQLException {
+        synchronized (service) {
+            Path result = service.pathsLocalBlock.get(idEq);
+            if (result == null) {
+                service.statement.execute("CREATE TABLE if not exists pathsToLocalBlock " +
+                        "('idEq' INTEGER PRIMARY KEY, 'path' text);");
+                ResultSet resultSet = service.statement.executeQuery("SELECT path FROM pathsToLocalBlock where idEq = " + String.valueOf(idEq));
+                if (resultSet.next()) {
+                    result = Paths.get(resultSet.getString(1));
+                } else {
+                    result = LocalBlock.pathDefaultBlock(idEq);
+                    service.statement.execute("INSERT INTO pathsToLocalBlock ('idEq', 'path') VALUES (" + String.valueOf(idEq) + ",'" +
+                            result.toAbsolutePath().toString() + "');");
+                }
+                service.pathsLocalBlock.put(idEq, result);
+            }
+            return result;
+        }
+    }
+
     public static Preferences pref() {
-        init();
         return service.preferences;
     }
 
-    public static void init() {
+    public static void init() throws IOException, SQLException, ClassNotFoundException {
         if (service == null)
             service = new ServiceSettings();
     }
 
     public static Preferences pref(String id) {
-        init();
         return service.preferences.node(id);
     }
 
