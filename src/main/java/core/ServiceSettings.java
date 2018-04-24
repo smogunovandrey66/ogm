@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import org.sqlite.JDBC;
 
 /**
  * Сервис настроек приложения <font style = "color: red"><b>ОГМ</b></font>
@@ -41,7 +42,8 @@ public class ServiceSettings {
     private ServiceSettings() throws IOException, SQLException, ClassNotFoundException {
         preferences = Preferences.userRoot().node(PlatformConst.makeVersion());
 //        Class.forName("org.sqlite.JDBC") ;
-        connection = DriverManager.getConnection(DB);
+        connection = JDBC.createConnection(DB, new Properties()); // DriverManager.getConnection(DB);
+
         statement = connection.createStatement();
 
         properties = new Properties();
